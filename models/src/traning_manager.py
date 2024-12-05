@@ -81,6 +81,12 @@ class TraningManager:
             os.makedirs(os.path.dirname(save_path), exist_ok=True)
             trainer.save_model(save_path)
             tokenizer.save_pretrained(save_path)
+
+            # tokenizer.json 강제 저장
+            tokenizer_json_path = os.path.join(save_path, "tokenizer.json")
+            tokenizer.backend_tokenizer.save(tokenizer_json_path)
+            print(f"tokenizer.json 파일이 {tokenizer_json_path}에 저장되었습니다.")
+
             print(f"{save_path} 경로로 모델 저장 완료")
 
             # 세션 종료
