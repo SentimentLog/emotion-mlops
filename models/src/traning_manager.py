@@ -43,7 +43,7 @@ class TraningManager:
             evaluation_strategy="epoch",
             save_strategy="epoch",
             load_best_model_at_end=True,
-            metric_for_best_metric="accuracy",
+            metric_for_best_model="accuracy",
             save_total_limit=3,
             fp16=True,
             report_to=report_to,
