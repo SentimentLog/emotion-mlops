@@ -8,7 +8,7 @@ class TrackingModel:
         dotenv_path = os.path.join(current_dir, '.env')
         load_dotenv(dotenv_path)
     @staticmethod
-    def intialize(project_name, run_name=None, key=None, config=None, entity="icucheol"):
+    def intialize(project_name, run_name=None, config=None, entity="icucheol"):
         wandb.login(key=os.getenv("WANDB_PASSWORD"))
         id = wandb.util.gerate_id() # identity generate
         wandb.init(

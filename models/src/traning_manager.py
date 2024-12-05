@@ -6,6 +6,9 @@ from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from .tracking_manager import TrackingModel
 
 class TraningManager:
+    def __init__(self, project_name, run_name=None):
+        self.project_name = project_name
+        self.run_name = run_name
 
     @staticmethod
     def compute_metrics(pred):
@@ -49,12 +52,14 @@ class TraningManager:
             report_to=report_to,
         )
 
-    @staticmethod
-    def train_model(model, train_dataset, eval_dataset, trainning_args, early_stopping_patience=2):
+
+    def train_model(self,model, train_dataset, eval_dataset, training_args, early_stopping_patience=2):
+        TrackingModel.intialize(self.project_name, self.run_name, training_args.to_dict())
+
         try:
             trainer = Trainer(
                 model=model,
-                args=trainning_args,
+                args=training_args,
                 train_dataset=train_dataset,
                 eval_dataset=eval_dataset,
                 compute_metrics=TraningManager.compute_metrics,
@@ -62,13 +67,13 @@ class TraningManager:
             )
 
             # 학습 시작
-            print(f'학습시작: 경로 -> {trainning_args.output_dir}')
+            print(f'학습시작: 경로 -> {training_args.output_dir}')
             trainer.train()
 
             if eval_dataset:
                 metrics = trainer.evaluate()
                 print(f'검증 결과: {metrics}')
-                TrackingModel.log_metrics(trainning_args.output_dir)
+                TrackingModel.log_model_path(training_args.output_dir)
 
 
             #모델 저장

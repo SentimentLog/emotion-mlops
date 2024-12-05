@@ -48,6 +48,10 @@ def parser_args():
         help='혹시 몰라서 GPU 세팅, T4로 해도 30분안에 학습 끝남'
     )
 
+    parser.add_argument("--run_name", type=str, default=None,
+        help="WandB 실행 이름"
+    )
+
     args = parser.parse_args()
     return args
 
@@ -78,6 +82,7 @@ def main():
     train = datasets['train']
     valid = datasets['val']
 
+    traning_manager = TraningManager(project_name=args.project_name, run_name=args.run_name)
 
     training_args = TraningManager.configure_trainning(
         output_dir=args.model_save_path,
@@ -86,8 +91,15 @@ def main():
         batch_size=args.batch_size,
     )
 
-    TraningManager.train_model(model, train, valid, training_args)
-
+    # 모델 학습
+    try:
+        traning_manager.train_model(model, train, valid, training_args)
+        print(f"학습 완료. 모델 저장 경로: {args.model_save_path}")
+    except Exception as e:
+        print(f"모델 학습 중 오류 발생: {e}")
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except Exception as e:
+        print(f"프로그램 실행 중 오류 발생: {e}")
