@@ -76,7 +76,7 @@ def main():
 
     datasets = data_loader.get_datasets()
     train = datasets['train']
-    valid = datasets['valid']
+    valid = datasets['val']
 
 
     training_args = TraningManager.configure_trainning(
