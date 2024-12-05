@@ -63,7 +63,7 @@ def main():
         print(f'사용할 디바이스: {args.device}')
 
 
-    model_manager = ModelManager(base_model='monolog/Kobert', device=args.device)
+    model_manager = ModelManager(base_model='monologg/kobert', device=args.device)
     model, tokenizer = model_manager._load_model_and_tokenizer(num_labels=num_labels)
 
 

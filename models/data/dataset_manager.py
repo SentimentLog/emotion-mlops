@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import Dataset
 import json
 import os
-
+from typing import List
 
 class DatasetManager(Dataset):
     def __init__(self, path:str, tokenizer, max_length: int=128):

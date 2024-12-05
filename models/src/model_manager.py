@@ -37,8 +37,8 @@ class ModelManager:
         :param num_labels: 레이블 개수
         :return:
         """
-        model = AutoModelForSequenceClassification.from_pretrained(self.base_model, num_labels=num_labels)
-        tokenizer = AutoTokenizer.from_pretrained(self.base_model, trust_remote_code=True)
+        model = AutoModelForSequenceClassification.from_pretrained(self.base_model, num_labels=num_labels, use_auth_token=self.token)
+        tokenizer = AutoTokenizer.from_pretrained(self.base_model, trust_remote_code=True, token=self.token)
 
         # padding
         tokenizer.padding_side = "right"  # 패딩을 오른쪽에 적용
