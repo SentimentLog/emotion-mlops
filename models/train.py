@@ -99,7 +99,7 @@ def main():
 
     # 모델 학습
     try:
-        traning_manager.train_model(model, tokenizer, valid, training_args)
+        traning_manager.train_model(model, tokenizer, train, valid, training_args)
         print(f"학습 완료. 모델 저장 경로: {args.model_save_path}")
     except Exception as e:
         print(f"모델 학습 중 오류 발생: {e}")
