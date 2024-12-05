@@ -40,7 +40,7 @@ class DatasetManager(Dataset):
 
     def __getitem__(self, idx):
         item = {key: val[idx] for key, val in self.encodings.items()}
-        item['labels'] = torch.tensor(self.labels[idx], dtype=torch.long)
+        item['label'] = torch.tensor(self.labels[idx], dtype=torch.long)
         return item
 
     def __len__(self):
