@@ -11,12 +11,12 @@ def parser_args():
     parser = argparse.ArgumentParser(description='모델 파라미터 튜닝')
 
     parser.add_argument(
-        '--train_path', type=str, default='../data/raw/train_dataset.json',
+        '--train_path', type=str, default='./data/raw/train_dataset.json',
         help='훈련 데이터셋 로드, json으로 구성'
     )
 
     parser.add_argument(
-        '--val_path', type=str, default='../data/raw/test_dataset.json',
+        '--val_path', type=str, default='./data/raw/test_dataset.json',
         help='검증 데이터셋 로드, json으로 구성'
     )
 

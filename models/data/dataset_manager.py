@@ -11,6 +11,8 @@ class DatasetManager(Dataset):
         self.max_length = max_length
         self.num_labels = 7
 
+        self.encodings, self.labels = self.load_and_preprocess()
+
     def load_and_preprocess(self):
         data = self.load_data(self.path)
 
@@ -34,7 +36,7 @@ class DatasetManager(Dataset):
             raise FileNotFoundError(f'데이터를 찾을 수 없음 :{path}')
 
         with open(path, 'r', encoding='utf-8') as f:
-            data= json.load(f)
+            data = json.load(f)
 
         return data
 
