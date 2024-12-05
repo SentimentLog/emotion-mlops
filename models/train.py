@@ -52,6 +52,12 @@ def parser_args():
         help="WandB 실행 이름"
     )
 
+    parser.add_argument(
+        '--project_name', type=str, required=True,
+        help='WandB 프로젝트 이름'
+    )
+
+
     args = parser.parse_args()
     return args
 

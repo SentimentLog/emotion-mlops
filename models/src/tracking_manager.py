@@ -10,7 +10,7 @@ class TrackingModel:
     @staticmethod
     def intialize(project_name, run_name=None, config=None, entity="icucheol"):
         wandb.login(key=os.getenv("WANDB_PASSWORD"))
-        id = wandb.util.gerate_id() # identity generate
+        id = wandb.util.generate_id() # identity generate
         wandb.init(
             project=project_name,
             id=id,
