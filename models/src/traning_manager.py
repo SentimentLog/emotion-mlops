@@ -53,7 +53,7 @@ class TraningManager:
         )
 
 
-    def train_model(self,model, train_dataset, eval_dataset, training_args, early_stopping_patience=2):
+    def train_model(self,model, tokenizer, train_dataset, eval_dataset, training_args, early_stopping_patience=2):
         TrackingModel.intialize(self.project_name, self.run_name, training_args.to_dict())
 
         try:
@@ -80,6 +80,7 @@ class TraningManager:
             save_path = os.path.join(training_args.output_dir, 'KoBERT-Sentiment-Analysis')
             os.makedirs(os.path.dirname(save_path), exist_ok=True)
             trainer.save_model(save_path)
+            tokenizer.save_pretrained(save_path)
             print(f"{save_path} 경로로 모델 저장 완료")
 
             # 세션 종료
