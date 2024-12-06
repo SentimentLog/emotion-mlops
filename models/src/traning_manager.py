@@ -80,12 +80,16 @@ class TraningManager:
             save_path = os.path.join(training_args.output_dir, 'KoBERT-Sentiment-Analysis')
             os.makedirs(os.path.dirname(save_path), exist_ok=True)
             trainer.save_model(save_path)
-            tokenizer.save_pretrained(save_path)
 
-            # tokenizer.json 강제 저장
-            tokenizer_json_path = os.path.join(save_path, "tokenizer.json")
-            tokenizer.backend_tokenizer.save(tokenizer_json_path)
-            print(f"tokenizer.json 파일이 {tokenizer_json_path}에 저장되었습니다.")
+            try:
+                tokenizer.save_pretrained(save_path)
+            except Exception as e:
+                print(f'save_pretrained 실패, 수동으로 vocab.txt저장 : {e}')
+                vocab_path = os.path.join(save_path, 'vocab.txt')
+                with open(vocab_path, "w", encoding="utf-8") as f:
+                    for token in tokenizer.get_vocab().keys():
+                        f.write(f"{token}\n")
+                print(f"vocab.txt 파일이 {vocab_path}에 저장되었습니다.")
 
             print(f"{save_path} 경로로 모델 저장 완료")
 
