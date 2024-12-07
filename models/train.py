@@ -1,14 +1,18 @@
 import argparse
 import torch
+import os
+
+from datetime import datetime
 
 from src.model_manager import ModelManager
 from src.traning_manager import TraningManager
+from src.training_log import TrainingLog
 
 from data.dataset_loader import DatasetLoader
 
 
 def parser_args():
-    parser = argparse.ArgumentParser(description='모델 파라미터 튜닝')
+    parser = argparse.ArgumentParser(descri아ption='모델 파라미터 튜닝')
 
     parser.add_argument(
         '--train_path', type=str, default='./data/raw/train_dataset.json',
@@ -99,8 +103,35 @@ def main():
 
     # 모델 학습
     try:
-        traning_manager.train_model(model, tokenizer, train, valid, training_args)
+        print("모델 학습 시작")
+        result = traning_manager.train_model(model, tokenizer, train, valid, training_args)
         print(f"학습 완료. 모델 저장 경로: {args.model_save_path}")
+
+        training_log = TrainingLog(
+            host=os.getenv("POSTGRES_HOST"),
+            port=os.getenv("POSTGRES_PORT"),
+            user=os.getenv("POSTGRES_USER"),
+            password=os.getenv("POSTGRES_PASSWORD"),
+            database=os.getenv("POSTGRES_DB"),
+        )
+
+        # 훈련 결과 저장
+        training_log.save_training_log(
+            model_name="KoBERT_setiment_model",
+            model_version="v1.0",
+            dataset_version="v1.0",
+            accuracy=result['accuracy'],
+            loss=result['loss'],
+            f1_score=result['f1_score'],
+            hyperparameters={
+                "batch_size": args.batch_size,
+                "learning_rate": args.learning_rate,
+                "num_epochs": args.num_epochs,
+                "max_length": args.max_length,
+            },
+            artifact_path=arg.model_save_path,
+            measurement_date=datetime.now().strftime("%Y%m%d%H%M%S"),
+        )
     except Exception as e:
         print(f"모델 학습 중 오류 발생: {e}")
 
