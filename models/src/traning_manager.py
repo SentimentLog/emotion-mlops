@@ -91,11 +91,6 @@ class TraningManager:
                         f.write(f"{token}\n")
                 print(f"vocab.txt 파일이 {vocab_path}에 저장되었습니다.")
 
-                # tokenizer.json 수동 저장
-                tokenizer_json_path = os.path.join(save_path, 'tokenizer.json')
-                tokenizer.backend_tokenizer.save(tokenizer_json_path)
-                print(f"tokenizer.json 파일이 {tokenizer_json_path}에 저장되었습니다.")
-
             print(f"{save_path} 경로로 모델 저장 완료")
 
             # 세션 종료
