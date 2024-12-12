@@ -1,4 +1,4 @@
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
+from transformers import AutoModelForSequenceClassification, BertTokenizer
 import torch
 
 
@@ -9,7 +9,7 @@ class InferenceHandler:
 
         # 모델과 토크나이저 로드
         self.model = AutoModelForSequenceClassification.from_pretrained(model_path)
-        self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
+        self.tokenizer = BertTokenizer.from_pretrained(tokenizer_path)
         self.model.to(self.device)  # 선택한 장치로 모델 이동
 
     def predict(self, text, emotion_labels=None):
