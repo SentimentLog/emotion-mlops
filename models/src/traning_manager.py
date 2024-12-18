@@ -39,16 +39,13 @@ class TraningManager:
             learning_rate=learning_rate,
             per_device_train_batch_size=batch_size,
             per_device_eval_batch_size=batch_size,
-            warmup_steps=500,
-            weight_decay=0.01,
             logging_dir="./logs",
             logging_steps=10,
             evaluation_strategy="epoch",
             save_strategy="epoch",
-            load_best_model_at_end=True,
-            metric_for_best_model="accuracy",
-            save_total_limit=3,
+            metric_for_best_model="f1_marco",
             fp16=True,
+            load_best_model_at_end=True,
             report_to=report_to,
         )
 

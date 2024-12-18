@@ -8,7 +8,7 @@ from src.model_manager import ModelManager
 from src.traning_manager import TraningManager
 from src.training_log import TrainingLog
 
-from data.dataset_loader import DatasetLoader
+from data.dataset_manager import DatasetManager
 
 
 def parser_args():
@@ -35,7 +35,7 @@ def parser_args():
     )
 
     parser.add_argument(
-        '--batch_size', type=int, default=128,
+        '--batch_size', type=int, default=64,
         help='훈련용 배치사이즈, 작은 모델이니만큼 배치사이즈 크게 잡아도 무방'
     )
     parser.add_argument(
@@ -67,7 +67,6 @@ def parser_args():
 
 def main():
     args = parser_args()
-    num_labels = 7 # 추후에 전용 클래스 만들 예정
 
     # CUDA 설정 확인
     if args.device == 'cuda' and not torch.cuda.is_available():
@@ -78,19 +77,12 @@ def main():
 
 
     model_manager = ModelManager(base_model='monologg/kobert', device=args.device)
-    model, tokenizer = model_manager._load_model_and_tokenizer(num_labels=num_labels)
+    model = model_manager.load_models(num_labels=7)
+    tokenizer = model_manager.load_tokenizer()
 
-
-    data_loader = DatasetLoader(
-        train_path=args.train_path,
-        val_path=args.val_path,
-        tokenizer=tokenizer,
-        max_length=args.max_length,
-    )
-
-    datasets = data_loader.get_datasets()
-    train = datasets['train']
-    valid = datasets['val']
+    manager = DatasetManager()
+    train = manager.load_data(args.train_path).map(manager.tokenizer_settings, batched=True)
+    valid = manager.load_data(args.val_path).map(manager.tokenizer_settings, batched=True)
 
     traning_manager = TraningManager(project_name=args.project_name, run_name=args.run_name)
 
@@ -129,7 +121,7 @@ def main():
                 "num_epochs": args.num_epochs,
                 "max_length": args.max_length,
             },
-            artifact_path=arg.model_save_path,
+            artifact_path=args.model_save_path,
             measurement_date=datetime.now().strftime("%Y%m%d%H%M%S"),
         )
     except Exception as e:

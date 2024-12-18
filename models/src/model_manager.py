@@ -1,7 +1,11 @@
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
+from transformers import BertForSequenceClassification, AutoTokenizer
 from dotenv import load_dotenv
 from huggingface_hub import login
 import torch
+
+from .configuration import Configuration
+from .tokenization_kobert import KoBertTokenizer
+
 import os
 
 class ModelManager:
@@ -31,23 +35,19 @@ class ModelManager:
         login(token=self.token)
         print("허깅페이스 로그인 완료")
 
-    def _load_model_and_tokenizer(self, num_labels):
+    def load_models(self, num_labels):
         """
         모델, 토크나이저, 그리고 분류를 위한 레이블 개수 확인
         :param num_labels: 레이블 개수
         :return:
         """
-        model = AutoModelForSequenceClassification.from_pretrained(self.base_model, num_labels=num_labels)
-        tokenizer = AutoTokenizer.from_pretrained(self.base_model, trust_remote_code=True)
-
-        # padding
-        tokenizer.padding_side = "right"  # 패딩을 오른쪽에 적용
-        if tokenizer.pad_token is None:
-            # PAD 토큰이 정의되어 있지 않은 경우, EOS 토큰을 PAD 토큰으로 설정
-            tokenizer.pad_token = tokenizer.eos_token
-            print(f"PAD 토큰이 정의되어 있지 않아 EOS 토큰을 PAD 토큰으로 설정했습니다: {tokenizer.pad_token}")
-
+        config = Configuration().set_config(self.base_model)
+        model = BertForSequenceClassification.from_pretrained(self.base_model, num_labels=num_labels, config=config, trust_remote_code=True)
         model.to(self.device)
 
         print(f"{self.base_model} 모델과 토크나이저가 성공적으로 로드 되었음")
-        return model, tokenizer
+        return model
+
+    def load_tokenizer(self):
+        tokenizer = KoBertTokenizer.from_pretrained(self.base_model, trust_remote_code=True)
+        return tokenizer
